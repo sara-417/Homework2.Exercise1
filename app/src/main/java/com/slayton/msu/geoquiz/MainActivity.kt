@@ -35,16 +35,32 @@ class MainActivity : AppCompatActivity() {
 
         binding.trueButton.setOnClickListener{
             checkAnswer(true)
+            toggleButtons("trueButton")
         }
 
         binding.falseButton.setOnClickListener{
             checkAnswer(false)
+            toggleButtons("falseButton")
         }
         binding.nextButton.setOnClickListener{
             currentIndex=(currentIndex + 1) % questionBank.size
             updateQuestion()
+            toggleButtons("nextButton")
         }
         updateQuestion()
+    }
+
+    private fun toggleButtons(buttonID: String){
+        if(buttonID == "trueButton" || buttonID == "falseButton") {
+            //disable the buttons
+            binding.trueButton.isEnabled = false
+            binding.falseButton.isEnabled = false
+        }
+        else if (buttonID == "nextButton"){
+            //enable the buttons
+            binding.trueButton.isEnabled = true
+            binding.falseButton.isEnabled = true
+        }
     }
 
     private fun updateQuestion() {
