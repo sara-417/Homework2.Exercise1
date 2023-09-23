@@ -43,11 +43,28 @@
         app:icon="@drawable/ic_baseline_arrow_right_24"
         app:iconGravity="end"/>
 
-    <Button
-        android:id="@+id/getScoreButton"
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/getScoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/get_score_button"
+            android:visibility="invisible"/>
+
+        <Button
+        android:id="@+id/restartButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/get_score_button"
+        android:text="@string/restart_button"
         android:visibility="invisible"/>
+
+
+
+    </LinearLayout>
+
 
 </LinearLayout>

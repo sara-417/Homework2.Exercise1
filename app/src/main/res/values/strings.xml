@@ -4,6 +4,7 @@
     <string name="false_button">False</string>
     <string name="next_button">Next</string>
     <string name="get_score_button">Get Score</string>
+    <string name="restart_button">Restart</string>
     <string name="question_oceans">The Pacific Ocean is larger than the Atlantic Ocean.</string>
     <string name="question_mideast">The Suez Canal connects the Red Sea and the Indian Ocean.</string>
     <string name="question_africa">The source of the Nile River is in Egypt.</string>
@@ -12,4 +13,5 @@
     <string name="question_australia">Canberra is the capital of Australia.</string>
     <string name="correct_toast">Correct!!</string>
     <string name="incorrect_toast">Incorrect!!</string>
+    <string name = "score_toast">Your score is: </string>
 </resources>

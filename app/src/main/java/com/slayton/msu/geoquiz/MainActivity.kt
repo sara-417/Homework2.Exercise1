@@ -53,46 +53,16 @@ class MainActivity : AppCompatActivity() {
         }
         binding.getScoreButton.setOnClickListener{
             calculateAndDisplayScore(correctAnswerCounter)
-            //Log.d("TAG", "This is your score: $score.")
+            toggleButtons("getScoreButton")
+        }
+        binding.restartButton.setOnClickListener {
+            currentIndex = 0
+            correctAnswerCounter = 0
+            submittedAnswersCounter = 0
+            updateQuestion()
+            toggleButtons("restartButton")
         }
         updateQuestion()
-    }
-
-    private fun calculateAndDisplayScore(correctAnswers: Int) {
-
-        val numberOfQuestions = questionBank.size
-        val score = (correctAnswers.toFloat() / numberOfQuestions.toFloat()) * 100
-        val formattedScore = String.format("%.1f", score)
-        Log.d("TAG", "This is your score: $formattedScore.")
-    }
-
-    private fun recordAnswer(submittedAnswer: Boolean){
-        // check answer against the answer in the question class
-        val correctAnswer = questionBank[currentIndex].answer
-        submittedAnswersCounter++
-        // if the answers match, increment the correctAnswerCounter
-        if(correctAnswer == submittedAnswer) {
-            correctAnswerCounter++
-            //Log.d("TAG", correctAnswerCounter.toString())
-        }
-    }
-
-    private fun toggleButtons(buttonID: String){
-        if(buttonID == "trueButton" || buttonID == "falseButton") {
-            //disable the buttons
-            binding.trueButton.isEnabled = false
-            binding.falseButton.isEnabled = false
-            //Log.d("TAG", "This is how many answers have been submitted: $submittedAnswersCounter.")
-            if(submittedAnswersCounter == questionBank.size) {
-                binding.nextButton.isEnabled = false
-                binding.getScoreButton.isVisible = true
-            }
-        }
-        else if (buttonID == "nextButton"){
-            //enable the buttons
-            binding.trueButton.isEnabled = true
-            binding.falseButton.isEnabled = true
-        }
     }
 
     private fun updateQuestion() {
@@ -110,6 +80,54 @@ class MainActivity : AppCompatActivity() {
             R.string.incorrect_toast
         }
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun recordAnswer(submittedAnswer: Boolean){
+        val correctAnswer = questionBank[currentIndex].answer
+        submittedAnswersCounter++
+
+        if(correctAnswer == submittedAnswer) {
+            correctAnswerCounter++
+        }
+    }
+
+    private fun toggleButtons(buttonID: String){
+        if(buttonID == "trueButton" || buttonID == "falseButton") {
+            binding.trueButton.isEnabled = false
+            binding.falseButton.isEnabled = false
+
+            if(submittedAnswersCounter == questionBank.size) {
+                binding.nextButton.isEnabled = false
+                binding.getScoreButton.isVisible = true
+                binding.restartButton.isVisible = true
+                binding.restartButton.isEnabled = false
+            }
+        }
+        else if (buttonID == "nextButton"){
+            binding.trueButton.isEnabled = true
+            binding.falseButton.isEnabled = true
+        }
+        else if (buttonID == "getScoreButton") {
+            binding.restartButton.isEnabled = true
+
+        }
+        else if (buttonID == "restartButton") {
+            binding.trueButton.isEnabled = true
+            binding.falseButton.isEnabled = true
+            binding.nextButton.isEnabled = true
+            binding.getScoreButton.isVisible = false
+            binding.restartButton.isVisible = false
+        }
+    }
+
+    private fun calculateAndDisplayScore(correctAnswers: Int) {
+
+        val numberOfQuestions = questionBank.size
+        val score = (correctAnswers.toFloat() / numberOfQuestions.toFloat()) * 100
+        val formattedScore = String.format("%.1f", score)
+        var toastString = getString(R.string.score_toast) + " " + formattedScore + "%"
+        Toast.makeText(this, toastString, Toast.LENGTH_SHORT)
             .show()
     }
 
