@@ -1,13 +1,10 @@
 package com.slayton.msu.geoquiz
 
-import android.app.ProgressDialog.show
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
-import com.google.android.material.snackbar.Snackbar
+import androidx.core.view.isVisible
 import com.slayton.msu.geoquiz.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
@@ -15,6 +12,8 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityMainBinding
+    private var correctAnswerCounter = 0
+    private var submittedAnswersCounter = 0
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -25,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_asia, true),
     )
     private var currentIndex = 0
+    private var numberOfQuestionsIndex = questionBank.size - 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,19 +35,46 @@ class MainActivity : AppCompatActivity() {
 
         binding.trueButton.setOnClickListener{
             checkAnswer(true)
+            recordAnswer(true)
             toggleButtons("trueButton")
+
         }
 
         binding.falseButton.setOnClickListener{
             checkAnswer(false)
+            recordAnswer(false)
             toggleButtons("falseButton")
+
         }
         binding.nextButton.setOnClickListener{
             currentIndex=(currentIndex + 1) % questionBank.size
             updateQuestion()
             toggleButtons("nextButton")
         }
+        binding.getScoreButton.setOnClickListener{
+            calculateAndDisplayScore(correctAnswerCounter)
+            //Log.d("TAG", "This is your score: $score.")
+        }
         updateQuestion()
+    }
+
+    private fun calculateAndDisplayScore(correctAnswers: Int) {
+
+        val numberOfQuestions = questionBank.size
+        val score = (correctAnswers.toFloat() / numberOfQuestions.toFloat()) * 100
+        val formattedScore = String.format("%.1f", score)
+        Log.d("TAG", "This is your score: $formattedScore.")
+    }
+
+    private fun recordAnswer(submittedAnswer: Boolean){
+        // check answer against the answer in the question class
+        val correctAnswer = questionBank[currentIndex].answer
+        submittedAnswersCounter++
+        // if the answers match, increment the correctAnswerCounter
+        if(correctAnswer == submittedAnswer) {
+            correctAnswerCounter++
+            //Log.d("TAG", correctAnswerCounter.toString())
+        }
     }
 
     private fun toggleButtons(buttonID: String){
@@ -55,6 +82,11 @@ class MainActivity : AppCompatActivity() {
             //disable the buttons
             binding.trueButton.isEnabled = false
             binding.falseButton.isEnabled = false
+            //Log.d("TAG", "This is how many answers have been submitted: $submittedAnswersCounter.")
+            if(submittedAnswersCounter == questionBank.size) {
+                binding.nextButton.isEnabled = false
+                binding.getScoreButton.isVisible = true
+            }
         }
         else if (buttonID == "nextButton"){
             //enable the buttons
